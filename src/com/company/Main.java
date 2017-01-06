@@ -53,7 +53,7 @@ public class Main {
             }
 
             driver.quit();
-
+            System.exit(1);
         }
 
         //Starts on the sign in screen and inputs credentials
