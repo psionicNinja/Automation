@@ -8,8 +8,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
  * Created by Darryl on 1/6/2017.
  */
 public class EventScreen {
-    public WebElement getAnyEventAlsoViewedLogo(ChromeDriver driver){
-        WebElement anyEventAlsoViewedLogo =driver.findElement(By.className("a-carousel-card"));
+    private ChromeDriver mDriver;
+
+    public EventScreen(ChromeDriver driver) {
+        mDriver=driver;
+    }
+
+    public WebElement getAnyEventAlsoViewedLogo(){
+        WebElement anyEventAlsoViewedLogo =mDriver.findElement(By.className("a-carousel-card"));
         return anyEventAlsoViewedLogo;
     }
 

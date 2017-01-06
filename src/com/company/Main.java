@@ -1,6 +1,8 @@
 package com.company;
 
+import com.company.Screens.EventScreen;
 import com.company.Screens.HomeScreen;
+import com.company.Screens.SearchResultsScreen;
 import com.company.Screens.SignInScreen;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -17,8 +19,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //set arg as location to chromedriver
-        //set arg as report output location
+
         Path filee = Paths.get("chromedriver.exe");
         System.setProperty("webdriver.chrome.driver", filee.toString());
         ChromeDriver driver=new ChromeDriver();
@@ -26,30 +27,53 @@ public class Main {
         String username= "ticketsuk34@gmail.com";
         String password ="Tick3t$!";
 
-        //Get Sign In textBox and input credentials
 
-        SignInScreen signInScreen = new SignInScreen();
-        HomeScreen homeScreen = new HomeScreen();
+        SignInScreen signInScreen = new SignInScreen(driver);
+        HomeScreen homeScreen = new HomeScreen(driver);
+        SearchResultsScreen searchResultsScreen = new SearchResultsScreen(driver);
+        EventScreen eventScreen = new EventScreen(driver);
         Utilities utility = new Utilities();
 
-        signInScreen.isLoaded(driver);
-        signInScreen.getSignInUserNameTextBox(driver).sendKeys(username);
-        signInScreen.getSignInPasswordTextBox(driver).sendKeys(password);
-        signInScreen.getSignInButton(driver).click();
 
-        WebElement mainSearchBox=driver.findElement(By.id("tickets-search-input"));
-        mainSearchBox.sendKeys("show");
+        //Check to see if we're on the expected sign in page, if we're not, abort the test. There's no point in proceeding
 
-        WebElement button=driver.findElement(By.className("a-button-input"));
-        button.click();
+        if(!signInScreen.isLoaded()){
 
-        WebElement showSelect=driver.findElement(By.className("card-figure-content"));
-        showSelect.click();
+            /*Ideally, I'd create a separate logging method within the utility class for this, but for the sake of time,
+            I'm just reusing the one from the bottom.
+            */
+            ArrayList<String> wtFailure = new ArrayList<>();
 
-        WebElement showSuggestions =driver.findElement(By.className("a-carousel-card"));
-        showSuggestions.click();
+            wtFailure.add("Sign in screen failed to load as expected. Test aborted.");
+            HashMap<String,Boolean> results = utility.checkForStrings(driver,wtFailure);
+            try {
+                utility.printResults(results);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            driver.quit();
+
+        }
+
+        //Starts on the sign in screen and inputs credentials
+        signInScreen.getSignInUserNameTextBox().sendKeys(username);
+        signInScreen.getSignInPasswordTextBox().sendKeys(password);
+        signInScreen.getSignInButton().click();
+
+        //Land on home screen and start a search. I chose 'show' because it consistently produces a large number of results
+        homeScreen.getSearchTextBox().sendKeys("show");
+        homeScreen.getSearchSubmitButton().click();
+
+        //Click any search result.
+        searchResultsScreen.getAnySearchResult().click();
+
+        //Click on any suggested show. The aim is to force a scroll action and interact with the bottom of the page.
+        eventScreen.getAnyEventAlsoViewedLogo().click();
+
+        //Verify the needed headers are being displayed.
         ArrayList<String> textToCheckFor = new ArrayList<>();
+
 
         textToCheckFor.add(username);
         textToCheckFor.add("London");
@@ -57,7 +81,7 @@ public class Main {
         textToCheckFor.add("Event details");
         textToCheckFor.add("Customers who viewed this event also viewed");
 
-        //List of results
+        //Write the test results to file
         HashMap<String,Boolean> results = utility.checkForStrings(driver,textToCheckFor);
         try {
             utility.printResults(results);

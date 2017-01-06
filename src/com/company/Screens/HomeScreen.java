@@ -8,14 +8,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public class HomeScreen {
 
-    public WebElement getSearchTextBox(ChromeDriver driver){
-        WebElement searchTextBox=driver.findElement(By.id("tickets-search-input"));
+    private ChromeDriver mDriver;
+    public HomeScreen(ChromeDriver driver) {
+        mDriver=driver;
+    }
+    public WebElement getSearchTextBox(){
+        WebElement searchTextBox=mDriver.findElement(By.id("tickets-search-input"));
         return searchTextBox;
     }
 
 
-    public WebElement getSearchSubmitButton(ChromeDriver driver){
-        WebElement searchSubmitButton=driver.findElement(By.className("a-button-input"));
+    public WebElement getSearchSubmitButton(){
+        WebElement searchSubmitButton=mDriver.findElement(By.className("a-button-input"));
         return searchSubmitButton;
     }
 }

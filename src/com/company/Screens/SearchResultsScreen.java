@@ -9,8 +9,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public class SearchResultsScreen {
 
-    public WebElement getAnySearchResult(ChromeDriver driver){
-        WebElement anySearchResult=driver.findElement(By.className("card-figure-content"));
+    private ChromeDriver mDriver;
+    public SearchResultsScreen(ChromeDriver driver) {
+        mDriver=driver;
+    }
+
+    public WebElement getAnySearchResult(){
+        WebElement anySearchResult=mDriver.findElement(By.className("card-figure-content"));
         return anySearchResult;
     }
 }

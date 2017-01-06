@@ -10,23 +10,27 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public class SignInScreen {
 
-    public WebElement getSignInUserNameTextBox(ChromeDriver driver){
-        WebElement signInTextBox =driver.findElement(By.id("ap_email")) ;
+    private ChromeDriver mDriver;
+    public SignInScreen(ChromeDriver driver) {
+        mDriver=driver;
+    }
+    public WebElement getSignInUserNameTextBox(){
+        WebElement signInTextBox =mDriver.findElement(By.id("ap_email")) ;
         return signInTextBox;
     }
 
-    public WebElement getSignInPasswordTextBox(ChromeDriver driver){
-        WebElement passwordTextBox =driver.findElement(By.id("ap_password")) ;
+    public WebElement getSignInPasswordTextBox(){
+        WebElement passwordTextBox =mDriver.findElement(By.id("ap_password")) ;
         return passwordTextBox;
     }
 
-    public WebElement getSignInButton(ChromeDriver driver) {
-        WebElement getSignInButton =driver.findElement(By.id("signInSubmit-input"));
+    public WebElement getSignInButton() {
+        WebElement getSignInButton =mDriver.findElement(By.id("signInSubmit-input"));
         return getSignInButton;
     }
 
-    public Boolean isLoaded(ChromeDriver driver) {
+    public Boolean isLoaded() {
 
-        return getSignInButton(driver).isDisplayed();
+        return getSignInButton().isDisplayed();
     }
 }
